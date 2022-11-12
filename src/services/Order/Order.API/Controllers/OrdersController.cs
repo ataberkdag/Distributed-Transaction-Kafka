@@ -16,6 +16,7 @@ namespace Order.API.Controllers
         }
 
         [HttpPost]
+        [Route("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrder.Command command)
         {
             return Ok(await _mediator.Send(command));

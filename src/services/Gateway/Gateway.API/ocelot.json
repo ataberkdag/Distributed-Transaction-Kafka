@@ -1,0 +1,37 @@
+{
+  "Routes": [
+    {
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/orders/{everything}",
+      "UpstreamPathTemplate": "/orders/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "ServiceName": "order_service",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/stocks/{everything}",
+      "UpstreamPathTemplate": "/stocks/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "ServiceName": "stock_service",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    }
+  }
+}

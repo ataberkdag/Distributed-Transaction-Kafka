@@ -16,6 +16,7 @@ namespace Stock.API.Controllers
         }
 
         [HttpPost]
+        [Route("AddStock")]
         public async Task<IActionResult> AddStock([FromBody] AddStock.Command command)
         {
             return Ok(await _mediator.Send(command));

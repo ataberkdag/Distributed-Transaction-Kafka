@@ -37,7 +37,7 @@ namespace OutboxWorkerService
 
                 var messages = await connection.QueryAsync<OutboxMessage>(sql);
 
-                var listOfIds = new List<long>();
+               var listOfIds = new List<long>();
                 foreach (var outboxMessage in messages)
                 {
                     try

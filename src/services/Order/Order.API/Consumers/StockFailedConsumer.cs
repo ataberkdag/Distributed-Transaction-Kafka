@@ -18,23 +18,27 @@ namespace Order.API.Consumers
             _serviceProvider = serviceProvider;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await this._consumer.ConsumeEvent(KafkaConsts.StockFailedTopicName, async (message) =>
-            {
-                var stockFailed = JsonSerializer.Deserialize<StockFailedIE>(message);
-
-                using (var scope = this._serviceProvider.CreateScope())
+            Task.Run(async () => {
+                await this._consumer.ConsumeEvent(KafkaConsts.StockFailedTopicName, async (message) =>
                 {
-                    var mediator = scope.ServiceProvider.GetService<IMediator>();
+                    var stockFailed = JsonSerializer.Deserialize<StockFailedIE>(message);
 
-                    await mediator.Send(new OrderFailed.Command
+                    using (var scope = this._serviceProvider.CreateScope())
                     {
-                        CorrelationId = stockFailed.CorrelationId
-                    });
-                }
+                        var mediator = scope.ServiceProvider.GetService<IMediator>();
 
-            }, stoppingToken);
+                        await mediator.Send(new OrderFailed.Command
+                        {
+                            CorrelationId = stockFailed.CorrelationId
+                        });
+                    }
+
+                }, stoppingToken);
+            });
+
+            return Task.CompletedTask;
         }
     }
 }

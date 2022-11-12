@@ -18,25 +18,29 @@ namespace Stock.API.Consumers
             _serviceProvider = serviceProvider;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await this._consumer.ConsumeEvent(KafkaConsts.OrderPlacedTopicName, async (message) =>
-            {
-                var orderPlaced = JsonSerializer.Deserialize<OrderPlacedIE>(message);
-
-                using (var scope = this._serviceProvider.CreateScope())
+            Task.Run(async () => {
+                await this._consumer.ConsumeEvent(KafkaConsts.OrderPlacedTopicName, async (message) =>
                 {
-                    var mediator = scope.ServiceProvider.GetService<IMediator>();
+                    var orderPlaced = JsonSerializer.Deserialize<OrderPlacedIE>(message);
 
-                    await mediator.Send(new DecreaseStock.Command
+                    using (var scope = this._serviceProvider.CreateScope())
                     {
-                        UserId = orderPlaced.UserId,
-                        CorrelationId = orderPlaced.CorrelationId,
-                        OrderItems = orderPlaced.OrderItems.Select(x => new Domain.Dtos.OrderItemDto(x.ItemId, x.Quantity)).ToList()
-                    });
-                }
+                        var mediator = scope.ServiceProvider.GetService<IMediator>();
 
-            }, stoppingToken);
+                        await mediator.Send(new DecreaseStock.Command
+                        {
+                            UserId = orderPlaced.UserId,
+                            CorrelationId = orderPlaced.CorrelationId,
+                            OrderItems = orderPlaced.OrderItems.Select(x => new Domain.Dtos.OrderItemDto(x.ItemId, x.Quantity)).ToList()
+                        });
+                    }
+
+                }, stoppingToken);
+            });
+
+            return Task.CompletedTask;
         }
     }
 }
