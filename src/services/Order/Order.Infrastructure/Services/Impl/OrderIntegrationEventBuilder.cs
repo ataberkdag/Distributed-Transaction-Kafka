@@ -13,8 +13,8 @@ namespace Order.Infrastructure.Services.Impl
         {
             var result = string.Empty;
 
-            if (domainEvent is OrderCreated)
-                result = KafkaConsts.OrderCreatedTopicName;
+            if (domainEvent is OrderPlaced)
+                result = KafkaConsts.OrderPlacedTopicName;
 
             return result;
         }
@@ -23,9 +23,9 @@ namespace Order.Infrastructure.Services.Impl
         {
             var result = default(IntegrationEvent);
 
-            if (domainEvent is OrderCreated oc)
+            if (domainEvent is OrderPlaced oc)
             {
-                result = new OrderCreatedIE(oc.CorrelationId, oc.UserId, oc.OrderItems.Select(oi => new OrderItemIEDto(oi.ItemId, oi.Quantity)).ToList());
+                result = new OrderPlacedIE(oc.CorrelationId, oc.UserId, oc.OrderItems.Select(oi => new OrderItemIEDto(oi.ItemId, oi.Quantity)).ToList());
             }
 
             return result;

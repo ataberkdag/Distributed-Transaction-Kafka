@@ -27,7 +27,19 @@ namespace Order.Domain.Entities
 
             OrderItems = orderItemDtos.Select(dto => OrderItem.CreateOrderItem(dto.ItemId, dto.Quantity)).ToList();
 
-            AddDomainEvent(new OrderCreated(CorrelationId, UserId, orderItemDtos));
+            AddDomainEvent(new OrderPlaced(CorrelationId, UserId, orderItemDtos));
+        }
+
+        public void CompleteOrder()
+        {
+            Status = OrderStatus.Completed;
+            StatusDescription = OrderStatus.Completed.ToString();
+        }
+
+        public void FailOrder(string description)
+        {
+            Status = OrderStatus.Failed;
+            StatusDescription = description;
         }
 
         public static Order CreateOrder(Guid userId, List<OrderItemDto> orderItemDtos)

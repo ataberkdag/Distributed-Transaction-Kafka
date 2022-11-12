@@ -30,7 +30,8 @@ namespace Core.Infrastructure.Dependencies
                 {
                     BootstrapServers = dependencyOptions.BrokerAddress,
                     AutoOffsetReset = AutoOffsetReset.Earliest,
-                    GroupId = dependencyOptions.ConsumerGroupId
+                    GroupId = dependencyOptions.ConsumerGroupId,
+                    AllowAutoCreateTopics = true
                 }).Build());
 
                 services.AddSingleton<IEventConsumer, EventConsumer>();

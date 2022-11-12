@@ -1,3 +1,4 @@
+using Order.API.Consumers;
 using Order.Application;
 using Order.Infrastructure;
 
@@ -6,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHostedService<StockDecreasedConsumer>();
+//builder.Services.AddHostedService<StockFailedConsumer>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

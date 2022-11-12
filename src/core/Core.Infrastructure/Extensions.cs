@@ -27,7 +27,7 @@ namespace Core.Infrastructure
 
                 await dbContext.Set<OutboxMessage>()
                     .AddAsync(OutboxMessage.Create(integrationEvent?.GetType().AssemblyQualifiedName, 
-                        JsonSerializer.Serialize(integrationEvent), topicName));
+                        JsonSerializer.Serialize<object>(integrationEvent), topicName));
             });
 
             Task.WhenAll(tasks);
