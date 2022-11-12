@@ -2,6 +2,7 @@
 using Core.Infrastructure;
 using Core.Infrastructure.Dependencies;
 using Core.Infrastructure.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Order.Domain.Abstractions;
@@ -21,12 +22,13 @@ namespace Order.Infrastructure
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderUnitOfWork, OrderUnitOfWork>();
 
-            services.AddCoreInfrastructure<OrderDbContext>(options => {
-                options.ConnectionString = configuration.GetConnectionString("Database");
-            });
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            services.AddDbContext<OrderDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("Database")));
+
+            services.AddCoreInfrastructure();
 
             services.AddBrokerDependency(options => {
-                options.MessageServiceType = MessageServiceType.Both;
+                options.MessageServiceType = MessageServiceType.Consumer;
                 options.BrokerAddress = configuration.GetValue<string>("Kafka:BootstrapServers");
                 options.ConsumerGroupId = configuration.GetValue<string>("Kafka:ConsumerGroupId");
             });
