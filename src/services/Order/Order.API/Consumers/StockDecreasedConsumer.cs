@@ -22,7 +22,7 @@ namespace Order.API.Consumers
         {
             await this._consumer.ConsumeEvent(KafkaConsts.StockDecreasedTopicName, async (message) =>
             {
-                var orderPlaced = JsonSerializer.Deserialize<StockDecreasedIE>(message);
+                var stockDecreased = JsonSerializer.Deserialize<StockDecreasedIE>(message);
 
                 using (var scope = this._serviceProvider.CreateScope())
                 {
@@ -30,7 +30,7 @@ namespace Order.API.Consumers
 
                     await mediator.Send(new OrderCompleted.Command
                     {
-                        CorrelationId = orderPlaced.CorrelationId
+                        CorrelationId = stockDecreased.CorrelationId
                     });
                 }
 
