@@ -14,7 +14,7 @@ namespace Order.Infrastructure.Services.Impl
             var result = string.Empty;
 
             if (domainEvent is OrderPlaced)
-                result = KafkaConsts.OrderPlacedTopicName;
+                result = KafkaConsts.StockConsumerTopicName;
 
             return result;
         }

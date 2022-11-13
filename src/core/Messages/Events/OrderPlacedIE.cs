@@ -6,11 +6,12 @@
         public Guid UserId { get; set; }
         public List<OrderItemIEDto> OrderItems { get; set; }
 
-        public OrderPlacedIE(Guid correlationId, Guid userId, List<OrderItemIEDto> orderItems)
+        public OrderPlacedIE(Guid correlationId, Guid userId, List<OrderItemIEDto> orderItems) : base(typeof(OrderPlacedIE).AssemblyQualifiedName)
         {
             CorrelationId = correlationId;
             UserId = userId;
             OrderItems = orderItems;
+            Type = typeof(OrderPlacedIE).AssemblyQualifiedName;
         }
     }
 

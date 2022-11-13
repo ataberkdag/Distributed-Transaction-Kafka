@@ -13,11 +13,8 @@ namespace Stock.Infrastructure.Services.Impl
         {
             var result = string.Empty;
 
-            if (domainEvent is StockDecreased)
-                result = KafkaConsts.StockDecreasedTopicName;
-
-            if (domainEvent is StockFailed)
-                result = KafkaConsts.StockFailedTopicName;
+            if (domainEvent is StockDecreased or StockFailed)
+                result = KafkaConsts.OrderConsumerTopicName;
 
             return result;
         }

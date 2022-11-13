@@ -11,19 +11,7 @@ namespace Core.Infrastructure.Services.Impl
             this._consumer = consumer;
         }
 
-        public async Task ConsumeEvent(string topic, Func<string, Task> callback, CancellationToken cancellationToken)
-        {
-            this._consumer.Subscribe(topic);
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var response = this._consumer.Consume();
-
-                await callback(response.Message.Value);
-            }
-        }
-
-        /*
+        
         public async Task ConsumeEvent(string topic, Func<string, Task> callback, CancellationToken cancellationToken)
         {
             this._consumer.Subscribe(topic);
@@ -36,6 +24,6 @@ namespace Core.Infrastructure.Services.Impl
 
                 await callback(response.Message.Value);
             }
-        }*/
+        }
     }
 }

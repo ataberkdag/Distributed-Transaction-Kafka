@@ -2,8 +2,7 @@
 {
     public static class KafkaConsts
     {
-        public const string OrderPlacedTopicName = "order_created";
-        public const string StockDecreasedTopicName = "stock_decreased";
-        public const string StockFailedTopicName = "stock_failed";
+        public const string StockConsumerTopicName = "stock_consumer";
+        public const string OrderConsumerTopicName = "order_consumer";
     }
 }
