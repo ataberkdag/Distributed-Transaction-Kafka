@@ -30,6 +30,13 @@ namespace Stock.Application.Features.Commands
                 {
                     var stock = (await _uow.Stocks.FindByQuery(x => x.ItemId == orderItem.ItemId)).FirstOrDefault();
 
+                    if (stock == null)
+                    {
+                        stock = Stock.Domain.Entities.Stock.Create(orderItem.ItemId, orderItem.Quantity);
+
+                        await _uow.Stocks.AddAsync(stock);
+                    }
+
                     var decreaseResult = stock?
                         .DecreaseStock(request.CorrelationId, request.UserId, orderItem.Quantity, orderItem.Equals(lastOrderItem));
 
